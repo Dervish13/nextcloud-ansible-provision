@@ -1,0 +1,13 @@
+---
+
+- name: apt update
+  become: True
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: general setup
+  become: True
+  with_items: "{{ general_packages }}"
+  apt:
+    name: "{{ item.name }}"

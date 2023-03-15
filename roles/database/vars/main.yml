@@ -1,0 +1,4 @@
+---
+database_packages:
+  - name: postgresql
+  - name: php-pgsql

@@ -1,0 +1,6 @@
+---
+- name: install database packages
+  become: True
+  with_items: "{{ database_packages }}"
+  apt:
+    name: "{{ item.name }}"

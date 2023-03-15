@@ -1,0 +1,51 @@
+---
+#- name: install nextcloud packages
+#  become: True
+#  with_items: "{{ nextcloud_packages }}"
+#  apt:
+#    name: "{{ item.name }}"
+
+- name: Download nextcloud md5 hash
+  ansible.builtin.get_url:
+    url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2.md5
+    dest: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2.md5
+    mode: '0440'
+      #https://download.nextcloud.com/server/releases/nextcloud{{ nextcloud_version }}.tar.bz2
+
+- name: Extract md5 hash
+  shell: cat /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2.md5 | awk '{print $1;}'
+  register: md5_hash
+
+# - name: Test md5 hash
+#   debug:
+#     msg: Hash is {{ md5_hash }}
+
+- name: Download nextcloud bz2
+  ansible.builtin.get_url:
+    url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2
+    dest: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2
+    mode: '0440'
+    checksum: md5:{{ md5_hash.stdout_lines }}
+
+- name: Unarchive nextcloud
+  become: True
+  ansible.builtin.unarchive:
+    src: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2
+    dest: /var/www/
+    remote_src: yes
+
+- name: change nextcloud directory owner and permisions
+  become: True
+  ansible.builtin.file:
+    path: /var/www/nextcloud
+    owner: www-data
+    group: www-data
+    recurse: True
+
+- name: fix default directory permisions
+  become: True
+  ansible.builtin.file:
+    path: /var/www/nextcloud
+    state: directory
+    mode: '0755'
+    recurse: True

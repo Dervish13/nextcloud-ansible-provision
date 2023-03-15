@@ -1,0 +1,8 @@
+---
+- name: Provision nextcloud
+  hosts: all
+  roles:
+        - general
+        - nextcloud
+        - database
+#        - configuration

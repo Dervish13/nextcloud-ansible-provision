@@ -1,0 +1,16 @@
+---
+general_packages:
+  - name: vim 
+  - name: nginx
+  - name: php8.1
+  - name: php-gd
+  - name: php-mysql
+  - name: php-curl
+  - name: php-mbstring
+  - name: php-intl
+  - name: php-gmp
+  - name: php-bcmath
+  - name: php-xml
+  - name: php-imagick
+  - name: php-zip
+  - name: php-fpm
