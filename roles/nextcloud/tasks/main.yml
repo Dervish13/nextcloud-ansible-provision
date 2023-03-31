@@ -6,7 +6,7 @@
 #    name: "{{ item.name }}"
 
 - name: Download nextcloud md5 hash
-  ansible.builtin.get_url:
+  get_url:
     url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2.md5
     dest: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2.md5
     mode: '0440'
@@ -21,7 +21,7 @@
 #     msg: Hash is {{ md5_hash }}
 
 - name: Download nextcloud bz2
-  ansible.builtin.get_url:
+  get_url:
     url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2
     dest: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2
     mode: '0440'
@@ -29,14 +29,14 @@
 
 - name: Unarchive nextcloud
   become: True
-  ansible.builtin.unarchive:
+  unarchive:
     src: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2
     dest: /var/www/
     remote_src: yes
 
 - name: change nextcloud directory owner and permisions
   become: True
-  ansible.builtin.file:
+  file:
     path: /var/www/nextcloud
     owner: www-data
     group: www-data
@@ -44,7 +44,7 @@
 
 - name: fix default directory permisions
   become: True
-  ansible.builtin.file:
+  file:
     path: /var/www/nextcloud
     state: directory
     mode: '0755'

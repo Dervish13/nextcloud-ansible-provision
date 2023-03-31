@@ -4,3 +4,24 @@
   with_items: "{{ database_packages }}"
   apt:
     name: "{{ item.name }}"
+
+- name: create database user
+  become: True
+  shell: |
+    su postgres -c 'createdb "{{ database_vars.user }}"'
+    echo "CREATE USER {{ database_vars.user }} WITH PASSWORD '{{ database_vars.password }}';" | su postgres -c 'psql'
+    echo "ALTER DATABASE {{ database_vars.user }} OWNER TO {{ database_vars.user }};" | su postgres -c 'psql'
+    echo "GRANT ALL PRIVILEGES ON DATABASE nextcloud TO nextcloud;" | su postgres -c 'psql'
+  args:
+    chdir: /var/lib/postgresql
+
+- name: Allow user password auth
+  become: True
+  lineinfile:
+    path: /etc/postgresql/14/main/pg_hba.conf
+    line: local   nextcloud       nextcloud                               scram-sha-256
+    insertafter: \# Database administrative login by Unix domain socket
+  notify:
+    - restart postgresql
+
+

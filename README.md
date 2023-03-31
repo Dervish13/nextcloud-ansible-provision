@@ -9,5 +9,6 @@ WIP:
 
 RUN:
     - edit `hosts` and `inventory/nextcloud` files, insert your desired hosts
+    - edit roles/database/vars/main.yml and set username and password for database connection
     - run `ansible-playbook -i inventory/nextcloud  provision.yml`
 

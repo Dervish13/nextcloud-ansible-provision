@@ -1,3 +1,17 @@
 ---
-- name: configure packages
+
+- name: setup nginx conf
   become: True
+  template:
+    src: nginx_conf.j2
+    dest: /etc/nginx/sites-available/nextcloud.conf
+
+- name: link nextcloud conf to sites-available
+  become: True
+  file:
+    path: /etc/nginx/sites-enabled/nextcloud.conf
+    src: /etc/nginx/sites-available/nextcloud.conf
+    state: link
+    mode: 644
+  notify:
+    - restart nginx

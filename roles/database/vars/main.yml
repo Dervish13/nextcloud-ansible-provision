@@ -2,3 +2,7 @@
 database_packages:
   - name: postgresql
   - name: php-pgsql
+
+database_vars:
+  user: <db user>
+  password: <db password>
